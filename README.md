@@ -17,13 +17,7 @@ This directory contains scripts and notebooks used to launch analyses.
 - `louvain_matrix.py` is used to compute correlation matrix between maps of different pipelines for each group and perform community detection. It also plots the graphs and community matrices. 
 - `mean_maps.py` will compute the mean statistic maps per Louvain communities based on the matrix computed using previous script. 
 
-### `data`
-
-This directory is made to contain data that will be used by scripts/notebooks stored in the `src` directory and to contain results of those scripts. 
-
-### `results`
-
-This directory contains notebooks and scripts that were used to analyze the results of the experiments. 
+To launch these, just change the parameters in the script files and launch in terminal: `python3 {script_name}.py`.
 
 ### `figures`
 
