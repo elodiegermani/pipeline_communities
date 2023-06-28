@@ -43,7 +43,7 @@ def compute_intersection_mask(data_path, contrast):
 def compute_correlation_matrix(data_path, contrast, mask):
     target = datasets.load_mni152_gm_template(4)
 
-    if not os.path.exists(f"../figures/corr_matrix_1000_groups_{contrast}"):
+    if not os.path.exists(f"../../figures/corr_matrix_1000_groups_{contrast}"):
         print('Computing correlation matrix...')
         Qs=[]
         for n in range(1,1001):
@@ -64,11 +64,11 @@ def compute_correlation_matrix(data_path, contrast, mask):
                 data.append(np.reshape(masked_resampled_gm_data,-1))
             Q = numpy.corrcoef(data)  
             Qs.append(Q)
-        with open(f"../figures/corr_matrix_1000_groups_{contrast}", "wb") as fp:   #Pickling
+        with open(f"../../figures/corr_matrix_1000_groups_{contrast}", "wb") as fp:   #Pickling
             pickle.dump(Qs, fp)
 
     else:
-        with open(f"../figures/corr_matrix_1000_groups_{contrast}", "rb") as fp:   #Pickling
+        with open(f"../../figures/corr_matrix_1000_groups_{contrast}", "rb") as fp:   #Pickling
             Qs=pickle.load(fp)
 
     return Qs
@@ -230,7 +230,7 @@ def compute_mean_maps(data_path, contrast, mask, partition):
     target = datasets.load_mni152_gm_template(4)
     masker = input_data.NiftiMasker(
             mask_img=mask)
-    if not os.path.exists(f'../figures/mean_img_community_0_con_{contrast}.nii'):
+    if not os.path.exists(f'../../figures/mean_img_community_0_con_{contrast}.nii'):
         print('Computing mean image...')
         for community in np.unique(list(partition.values())):
             pipelines = [sub for i, sub in enumerate(subject) if partition[i]==community]
@@ -257,7 +257,7 @@ def compute_mean_maps(data_path, contrast, mask, partition):
                 meandata = np.mean(maskdata, 0)
                 mean_img = masker.inverse_transform(meandata)
 
-                nib.save(mean_img, f'../figures/mean_img_pipeline_{soft}-{f}-{p}-{h}_con_{contrast}.nii')
+                nib.save(mean_img, f'../../figures/mean_img_pipeline_{soft}-{f}-{p}-{h}_con_{contrast}.nii')
 
                 mean_data.append(mean_img)
 
@@ -276,7 +276,7 @@ def plot_mean_image(contrast, partition):
     
     fig.suptitle(f'{contrast.upper()}', size=28, fontweight='bold', backgroundcolor= 'black', color='white')
     for community in range(n_communities):
-        mean_img = nib.load(f'../figures/mean_img_community_{community}_con_{contrast}.nii')
+        mean_img = nib.load(f'../../figures/mean_img_community_{community}_con_{contrast}.nii')
         ax = fig.add_subplot(gs[0, int(community)])
 
         disp = plotting.plot_glass_brain(mean_img, display_mode = 'z', colorbar = True, annotate=False, 
@@ -291,4 +291,4 @@ def plot_mean_image(contrast, partition):
                                                  cmap=nilearn_cmaps['cold_hot'], plot_abs=False, figure=fig, axes=ax)
         disp2.title(f'Community {community+1}', size=28, fontweight='bold')
 
-    fig.savefig(f'../figures/mean_maps_communities_{contrast}.png', dpi=300) 
+    fig.savefig(f'../../figures/mean_maps_communities_{contrast}.png', dpi=300) 
