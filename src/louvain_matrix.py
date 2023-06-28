@@ -19,7 +19,7 @@ from lib import louvain_utils
 
 def main():
 	data_path = '/srv/tempdd/egermani/hcp_many_pipelines'
-	contrast = 'right-foot'
+	contrast = 'left-foot'
 
 	mask = louvain_utils.compute_intersection_mask(data_path, contrast)
 	Qs = louvain_utils.compute_correlation_matrix(data_path, contrast, mask)

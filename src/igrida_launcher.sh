@@ -3,7 +3,7 @@
 
 # Parameters
 expe_name="louvain_matrix"
-main_script=/srv/tempdd/egermani/pipeline_distance/src/preprocess.py
+main_script=/srv/tempdd/egermani/pipeline_distance/src/louvain_matrix.py
 
 echo "Create dir for log"
 CURRENTDATE=`date +"%Y-%m-%d"`
