@@ -32,7 +32,7 @@ def main():
 	#saving_name = '{}/graph_community_alltogether.png'.format(results_dir)
 	title_graph = "Community of HCP many pipelines"
 	title_heatmap = "Heatmap (Louvain organized) based on occurence \nof belonging to the same community across each group-level analysis"
-	saving_names = [f'../figures/graph_1000_groups_{contrast}.png',f'../figures/heatmap_1000_groups_{contrast}.png']
+	saving_names = [f'/srv/tempdd/egermani/pipeline_distance/figures/graph_1000_groups_{contrast}.png',f'/srv/tempdd/egermani/pipeline_distance/figures/heatmap_1000_groups_{contrast}.png']
 
 	louvain_utils.build_both_graph_heatmap(matrix_graph, G, partition, subject, "All", saving_names, contrast)
         
