@@ -15,10 +15,10 @@ from community import community_louvain
 import networkx as nx
 import nibabel as nib
 import numpy as np
-from lib import louvain_utils
+from lib import louvain_utils, louvain_subject
 
 def main():
-	data_path = '/srv/tempdd/egermani/hcp_many_pipelines'
+	data_path = '/nfs/nas-empenn/data/share/users/egermani/hcp_many_pipelines'
 	contrast = 'left-foot'
 
 	data_type='subject'
@@ -40,7 +40,7 @@ def main():
 		louvain_utils.build_both_graph_heatmap(matrix_graph, G, partition, subject, "All", saving_names, contrast)
 
 	else: 
-        mask = louvain_subject.compute_intersection_mask(data_path, contrast)
+		mask = louvain_subject.compute_intersection_mask(data_path, contrast)
 		Qs = louvain_subject.compute_correlation_matrix(data_path, contrast, mask)
 		partitioning = louvain_subject.per_group_partitioning(Qs)
 		matrix_graph, subject = louvain_subject.compute_partition_matrix(data_path, contrast, partitioning)
