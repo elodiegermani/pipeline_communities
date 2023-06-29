@@ -48,7 +48,7 @@ def compute_correlation_matrix(data_path, contrast, mask):
         print('Computing correlation matrix...')
         Qs=[]
         for n in S:
-            data_fpath = sorted(glob(f'{data_path}/sub-{n}_{contrast}_*_tstat.nii'))
+            data_fpath = sorted(glob(f'{data_path}/sub-{n}_{contrast}_*_tstat.nii*'))
             data = []
             for fpath in data_fpath:
                 img = nib.load(fpath)
@@ -180,7 +180,8 @@ def build_both_graph_heatmap(matrix, G, partition, subjects, hyp, saving_names, 
     # draw the graph
     pos = nx.spring_layout(G, seed=0)
     # color the nodes according to their partition
-    colors = ['blue', 'orange', 'green', 'red', 'darkviolet', 'yellow', "yellowgreen", 'lime', 'crimson', 'aqua']
+    colors = ['blue', 'orange', 'green', 'red', 'darkviolet', 'yellow', "yellowgreen", 'lime', 'crimson', 'aqua', 'darkblue',
+             'darkgreen','blue', 'orange', 'green', 'red', 'darkviolet', 'yellow', "yellowgreen", 'lime', 'crimson', 'aqua', 'darkblue','darkgreen']
     # draw edges
     nx.draw_networkx_edges(G, pos, ax=axs, alpha=0.06)#, min_source_margin=, min_target_margin=)
     # useful for labeling nodes
