@@ -16,26 +16,37 @@ import networkx as nx
 import nibabel as nib
 import numpy as np
 from lib import louvain_utils, louvain_subject
+import itertools
 
 def main():
 	data_path = '/nfs/nas-empenn/data/share/users/egermani/hcp_many_pipelines'
-	contrast = 'left-hand'
+	repo_path = '/srv/tempdd/egermani/pipeline_distance'
+	contrast = 'all'
 
 	data_type='subject'
 
 	if data_type =='group':
-		mask = louvain_utils.compute_intersection_mask(data_path, contrast)
-		Qs = louvain_utils.compute_correlation_matrix(data_path, contrast, mask)
+		if contrast != 'all':
+			Qs = louvain_utils.compute_correlation_matrix(data_path, repo_path, contrast)
+
+		else:
+			contrast_list = ['right-hand', 'right-foot', 'left-hand', 'left-foot', 'tongue']
+			Qs_unchain = []
+
+			for con in contrast_list: 
+				Qs_unchain.append(louvain_utils.compute_correlation_matrix(data_path, repo_path, contrast))
+
+			Qs = list(itertools.chain(*Qs_unchain))
+
 		partitioning = louvain_utils.per_group_partitioning(Qs)
-		matrix_graph, subject = louvain_utils.compute_partition_matrix(data_path, contrast, partitioning)
+		matrix_graph, subject = louvain_utils.compute_partition_matrix(data_path, 'right-hand', partitioning)
 
 		G = nx.Graph(matrix_graph, seed=0)
 		# compute the best partition
 		partition = community_louvain.best_partition(G, random_state=0)
-		#saving_name = '{}/graph_community_alltogether.png'.format(results_dir)
-		title_graph = "Community of HCP many pipelines"
-		title_heatmap = "Heatmap (Louvain organized) based on occurence \nof belonging to the same community across each group-level analysis"
-		saving_names = [f'/srv/tempdd/egermani/pipeline_distance/figures/graph_1000_groups_{contrast}.png',f'/srv/tempdd/egermani/pipeline_distance/figures/heatmap_1000_groups_{contrast}.png']
+
+		saving_names = [f'{repo_path}/figures/graph_1000_groups_{contrast}.png',
+		f'{repo_path}/figures/heatmap_1000_groups_{contrast}.png']
 
 		louvain_utils.build_both_graph_heatmap(matrix_graph, G, partition, subject, "All", saving_names, contrast)
 
@@ -49,8 +60,8 @@ def main():
 		# compute the best partition
 		partition = community_louvain.best_partition(G, random_state=0)
 
-		saving_names = [f'/srv/tempdd/egermani/pipeline_distance/figures/graph_1080_subs_{contrast}.png',
-		f'/srv/tempdd/egermani/pipeline_distance/figures/heatmap_1080_subs_{contrast}.png']
+		saving_names = [f'{repo_path}/figures/graph_1080_subs_{contrast}.png',
+		f'{repo_path}/figures/heatmap_1080_subs_{contrast}.png']
 
 		louvain_subject.build_both_graph_heatmap(matrix_graph, G, partition, subject, "All", saving_names, contrast)
 		

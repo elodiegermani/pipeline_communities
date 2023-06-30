@@ -40,11 +40,12 @@ def compute_intersection_mask(data_path, contrast):
 
     return mask
 
-def compute_correlation_matrix(data_path, contrast, mask):
+def compute_correlation_matrix(data_path, repo_path, contrast):
     target = datasets.load_mni152_gm_template(4)
 
-    if not os.path.exists(f"/srv/tempdd/egermani/pipeline_distance/figures/corr_matrix_1000_groups_{contrast}"):
+    if not os.path.exists(f"{repo_path}/figures/corr_matrix_1000_groups_{contrast}"):
         print('Computing correlation matrix...')
+        mask = compute_intersection_mask(data_path, contrast)
         Qs=[]
         for n in range(1,1001):
             data_fpath = sorted(glob(f'{data_path}/group-{n}_{contrast}_*_tstat.nii'))
@@ -64,11 +65,12 @@ def compute_correlation_matrix(data_path, contrast, mask):
                 data.append(np.reshape(masked_resampled_gm_data,-1))
             Q = numpy.corrcoef(data)  
             Qs.append(Q)
-        with open(f"/srv/tempdd/egermani/pipeline_distance/figures/corr_matrix_1000_groups_{contrast}", "wb") as fp:   #Pickling
+            
+        with open(f"{repo_path}/figures/corr_matrix_1000_groups_{contrast}", "wb") as fp:   #Pickling
             pickle.dump(Qs, fp)
 
     else:
-        with open(f"/srv/tempdd/egermani/pipeline_distance/figures/corr_matrix_1000_groups_{contrast}", "rb") as fp:   #Pickling
+        with open(f"{repo_path}/figures/corr_matrix_1000_groups_{contrast}", "rb") as fp:   #Pickling
             Qs=pickle.load(fp)
 
     return Qs
@@ -76,7 +78,7 @@ def compute_correlation_matrix(data_path, contrast, mask):
 def per_group_partitioning(Qs):
     # Compute per group
     partitioning = {}
-    groupnums = [i for i in range(1000)]
+    groupnums = [i for i in range(len(Qs))]
 
     for i,group in enumerate(groupnums):
         correlation_matrix = Qs[i]
