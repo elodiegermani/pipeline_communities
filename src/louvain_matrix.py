@@ -15,55 +15,47 @@ from community import community_louvain
 import networkx as nx
 import nibabel as nib
 import numpy as np
-from lib import louvain_utils, louvain_subject
+from lib import louvain_utils
 import itertools
 
 def main():
-	data_path = '/nfs/nas-empenn/data/share/users/egermani/hcp_many_pipelines'
-	repo_path = '/srv/tempdd/egermani/pipeline_distance'
-	contrast = 'all'
+	# Parameters 
+	#data_path = '/nfs/nas-empenn/data/share/users/egermani/hcp_many_pipelines'
+	#repo_path = '/srv/tempdd/egermani/pipeline_distance'
+	data_path = '/Volumes/empenn/egermani/hcp_many_pipelines' # Path to data
+	repo_path = '/Users/egermani/Documents/pipeline_distance' # Path to repository (to avoid relative paths)
 
-	data_type='group'
+	contrast = 'left-hand'
+	data_type='sub'
 
-	if data_type =='group':
-		if contrast != 'all':
-			Qs = louvain_utils.compute_correlation_matrix(data_path, repo_path, contrast)
 
-		else:
-			contrast_list = ['right-hand', 'right-foot', 'left-hand', 'left-foot', 'tongue']
-			Qs_unchain = []
+	if contrast != 'all':
+		Qs = louvain_utils.compute_correlation_matrix(data_path, repo_path, contrast, data_type)
 
-			for con in contrast_list: 
-				Qs_unchain.append(louvain_utils.compute_correlation_matrix(data_path, repo_path, con))
+	else: # Concat all matrix 
+		contrast_list = ['right-hand', 'right-foot', 'left-hand', 'left-foot', 'tongue']
+		Qs_unchain = []
 
-			Qs = list(itertools.chain(*Qs_unchain))
+		for con in contrast_list: 
+			Qs_unchain.append(louvain_utils.compute_correlation_matrix(data_path, repo_path, con, data_type))
 
-		partitioning = louvain_utils.per_group_partitioning(Qs)
-		matrix_graph, subject = louvain_utils.compute_partition_matrix(data_path, 'right-hand', partitioning)
+		Qs = list(itertools.chain(*Qs_unchain))
 
-		G = nx.Graph(matrix_graph, seed=0)
-		# compute the best partition
-		partition = community_louvain.best_partition(G, random_state=0)
+	# Partition each group/subject level correlation matrix
+	partitioning = louvain_utils.per_group_partitioning(Qs)
 
-		saving_names = [f'{repo_path}/figures/graph_1000_groups_{contrast}.png',
-		f'{repo_path}/figures/heatmap_1000_groups_{contrast}.png']
+	# Compute matrix of belonging to the same community across groups/subject for each pair of pipeline
+	matrix_graph, subject = louvain_utils.compute_partition_matrix(data_path, partitioning, data_type)
 
-		louvain_utils.build_both_graph_heatmap(matrix_graph, G, partition, subject, "All", saving_names, contrast)
+	G = nx.Graph(matrix_graph, seed=0)
+	# Compute communities depending on the number of times two pipelines belong to the same community across groups/subjects
+	partition = community_louvain.best_partition(G, random_state=0)
 
-	else: 
-		mask = louvain_subject.compute_intersection_mask(data_path, contrast)
-		Qs = louvain_subject.compute_correlation_matrix(data_path, contrast, mask)
-		partitioning = louvain_subject.per_group_partitioning(Qs)
-		matrix_graph, subject = louvain_subject.compute_partition_matrix(data_path, contrast, partitioning)
+	saving_names = [f'{repo_path}/figures/graph_{len(Qs)}_{data_type}s_{contrast}.png',
+	f'{repo_path}/figures/heatmap_{len(Qs)}_{data_type}s_{contrast}.png']
 
-		G = nx.Graph(matrix_graph, seed=0)
-		# compute the best partition
-		partition = community_louvain.best_partition(G, random_state=0)
-
-		saving_names = [f'{repo_path}/figures/graph_1080_subs_{contrast}.png',
-		f'{repo_path}/figures/heatmap_1080_subs_{contrast}.png']
-
-		louvain_subject.build_both_graph_heatmap(matrix_graph, G, partition, subject, "All", saving_names, contrast)
+	# Plot results 
+	louvain_utils.build_both_graph_heatmap(matrix_graph, G, partition, subject, saving_names, contrast, data_type)
 		
 if __name__ == '__main__':
 	main()
