@@ -19,7 +19,7 @@ from lib import louvain_utils, louvain_subject
 
 def main():
 	data_path = '/nfs/nas-empenn/data/share/users/egermani/hcp_many_pipelines'
-	contrast = 'left-foot'
+	contrast = 'left-hand'
 
 	data_type='subject'
 
