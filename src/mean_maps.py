@@ -5,7 +5,7 @@ simplefilter(action='ignore', category=FutureWarning)
 simplefilter(action='ignore', category=UserWarning)
 simplefilter(action='ignore', category=RuntimeWarning)
 
-from lib import louvain_utils
+from lib import louvain_utils, mean_maps_utils
 from community import community_louvain
 import networkx as nx
 
@@ -28,8 +28,8 @@ def main():
     # compute the best partition
     partition = community_louvain.best_partition(G, random_state=0)
     
-    louvain_utils.compute_mean_maps(data_path, repo_path, contrast, partition, data_type)
-    louvain_utils.plot_mean_image(contrast, partition, repo_path, data_type)
+    mean_maps_utils.compute_mean_maps(data_path, repo_path, contrast, partition, data_type)
+    mean_maps_utils.plot_mean_image(contrast, partition, repo_path, data_type)
 
 if __name__ == '__main__':
 	main()
