@@ -204,18 +204,29 @@ def build_both_graph_heatmap(matrix, G, partition, subjects, hyp, saving_names, 
     plt.savefig(saving_names[0], dpi=300)
     plt.show()
     plt.close()
-    
+
     f, axs = plt.subplots(1, 1, figsize=(20, 20)) 
+    if contrast == 'all':
+        max_val = 2500
+        vmax=5000
+    else:
+        max_val = 500
+        vmax=1000
     # draw heatmap
     matrix_organized_louvain = reorganize_with_louvain_community(matrix, partition)
+    labs = np.array(matrix_organized_louvain).astype('int').astype('str')
     labels = [subjects[louvain_index] + "_c{}".format(partition[louvain_index]+1) for louvain_index in matrix_organized_louvain.columns]
-    cm = seaborn.heatmap(matrix_organized_louvain, center=0, cmap='coolwarm', robust=True, square=True, ax=axs, cbar_kws={'shrink': 0.6}, xticklabels=False)
-    #axs[1].set_title(title_heatmap, fontsize=16)
+    cm = seaborn.heatmap(matrix_organized_louvain, mask = matrix_organized_louvain > max_val, center=0, cmap='coolwarm', robust=True, square=True, ax=axs, cbar_kws={'shrink': 0.6}, xticklabels=False, annot=labs, fmt='', cbar=False, vmin=0, vmax=vmax)
+    cm = seaborn.heatmap(matrix_organized_louvain, mask = matrix_organized_louvain < max_val, center=0, cmap='coolwarm', robust=True, square=True, ax=axs, cbar_kws={'shrink': 0.6}, xticklabels=False, annot=labs, fmt='', annot_kws={"weight": "bold", "size":13}, vmin=0, vmax=vmax)
     N_team = matrix_organized_louvain.columns.__len__()
-    #axs[1].set_xticks(range(N_team), labels=labels, rotation=90, fontsize=7, fontweight='bold')
+    axs.set_xticks(range(N_team), labels=labels, rotation=90, fontsize=22)
     axs.set_yticks(range(N_team), labels=labels, rotation=360, fontsize=22)
-    
+
     for i, ticklabel in enumerate(cm.axes.yaxis.get_majorticklabels()):
+        color_tick = colors[int(ticklabel.get_text()[-1])-1]
+        ticklabel.set_color(color_tick)
+
+    for i, ticklabel in enumerate(cm.axes.xaxis.get_majorticklabels()):
         color_tick = colors[int(ticklabel.get_text()[-1])-1]
         ticklabel.set_color(color_tick)
 

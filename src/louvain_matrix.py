@@ -23,7 +23,7 @@ def main():
 	repo_path = '/srv/tempdd/egermani/pipeline_distance'
 	contrast = 'all'
 
-	data_type='subject'
+	data_type='group'
 
 	if data_type =='group':
 		if contrast != 'all':
@@ -34,7 +34,7 @@ def main():
 			Qs_unchain = []
 
 			for con in contrast_list: 
-				Qs_unchain.append(louvain_utils.compute_correlation_matrix(data_path, repo_path, contrast))
+				Qs_unchain.append(louvain_utils.compute_correlation_matrix(data_path, repo_path, con))
 
 			Qs = list(itertools.chain(*Qs_unchain))
 
