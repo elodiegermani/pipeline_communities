@@ -30,6 +30,7 @@ def main():
     
     mean_maps_utils.compute_mean_maps(data_path, repo_path, contrast, partition, data_type)
     mean_maps_utils.plot_mean_image(contrast, partition, repo_path, data_type)
+    mean_maps_utils.plot_pipeline_maps(contrast, partition, subject, repo_path, data_type)
 
 if __name__ == '__main__':
 	main()

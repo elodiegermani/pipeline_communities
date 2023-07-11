@@ -25,8 +25,8 @@ def main():
 	data_path = '/Volumes/empenn/egermani/hcp_many_pipelines' # Path to data
 	repo_path = '/Users/egermani/Documents/pipeline_distance' # Path to repository (to avoid relative paths)
 
-	contrast = 'left-hand'
-	data_type='sub'
+	contrast = 'right-hand'
+	data_type='group'
 
 
 	if contrast != 'all':

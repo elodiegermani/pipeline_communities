@@ -1,6 +1,7 @@
 import numpy
 import matplotlib.colors as mcolors
 import matplotlib.patches as mpatches
+from matplotlib.patches import Rectangle
 from nilearn.plotting.cm import _cmap_d as nilearn_cmaps
 import pandas
 import seaborn
@@ -230,10 +231,31 @@ def build_both_graph_heatmap(matrix, G, partition, subjects, saving_names, contr
             
     # draw heatmap
     matrix_organized_louvain = reorganize_with_louvain_community(matrix, partition)
+    
     labs = np.array(matrix_organized_louvain).astype('int').astype('str')
     labels = [subjects[louvain_index] + "_c{}".format(partition[louvain_index]+1) for louvain_index in matrix_organized_louvain.columns]
-    cm = seaborn.heatmap(matrix_organized_louvain, mask = matrix_organized_louvain > max_val, center=0, cmap='coolwarm', robust=True, square=True, ax=axs, cbar_kws={'shrink': 0.6}, xticklabels=False, annot=labs, fmt='', cbar=False, vmin=0, vmax=vmax)
-    cm = seaborn.heatmap(matrix_organized_louvain, mask = matrix_organized_louvain < max_val, center=0, cmap='coolwarm', robust=True, square=True, ax=axs, cbar_kws={'shrink': 0.6}, xticklabels=False, annot=labs, fmt='', annot_kws={"weight": "bold", "size":13}, vmin=0, vmax=vmax)
+    
+    mask_A = matrix_organized_louvain > max_val
+    mask_B = matrix_organized_louvain < max_val
+    
+    mask_C = np.ones_like(matrix_organized_louvain)
+    ind_mask_C = []
+    for i in range(len(labels)):
+        if labels[i].split(',')[1]=='5':
+            for j in range(len(labels)):
+                if labels[j] == labels[i].split(',')[0]+',8,'+labels[i].split(',')[2]+','+labels[i].split(',')[3]:
+                    mask_C[i][j] = 0
+                    ind_mask_C.append((i,j))
+                    
+    
+    cm = seaborn.heatmap(matrix_organized_louvain, mask = mask_A, center=0, cmap='coolwarm', robust=True, square=True, ax=axs, cbar_kws={'shrink': 0.6}, xticklabels=False, annot=labs, fmt='', cbar=False, vmin=0, vmax=vmax)
+    cm = seaborn.heatmap(matrix_organized_louvain, mask = mask_B, center=0, cmap='coolwarm', robust=True, square=True, ax=axs, cbar_kws={'shrink': 0.6}, xticklabels=False, annot=labs, fmt='', annot_kws={"weight": "bold", "size":13}, vmin=0, vmax=vmax)
+    #cm = seaborn.heatmap(matrix_organized_louvain, mask = mask_C, center=0, cmap='coolwarm', robust=True, square=True, ax=axs, cbar_kws={'shrink': 0.6}, xticklabels=False, annot=labs, fmt='', cbar=False, annot_kws={"weight": "bold", "size":13, "color":'green'}, vmin=0, vmax=vmax)
+    
+    for ind in ind_mask_C:
+        cm.add_patch(Rectangle(ind, 1, 1, fill=False, edgecolor='green', lw=3))
+
+    
     N_team = matrix_organized_louvain.columns.__len__()
     axs.set_xticks(range(N_team), labels=labels, rotation=90, fontsize=22)
     axs.set_yticks(range(N_team), labels=labels, rotation=360, fontsize=22)
