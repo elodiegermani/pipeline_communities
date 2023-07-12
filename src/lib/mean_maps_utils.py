@@ -115,7 +115,7 @@ def plot_mean_image(contrast, partition, repo_path, data_type):
 
         disp2 = plotting.plot_glass_brain(thresh_mean_img, display_mode = 'z', colorbar = True, annotate=False, 
                                                  cmap=nilearn_cmaps['cold_hot'], plot_abs=False, figure=fig, axes=ax)
-        disp2.title(f'Community {community+1}', size=28, fontweight='bold')
+        #disp2.title(f'Community {community+1}', size=28, fontweight='bold')
 
     fig.savefig(f'{repo_path}/figures/mean_maps_{data_type}_communities_{contrast}.png', dpi=300) 
 
@@ -183,6 +183,10 @@ def plot_pipeline_maps(contrast, partition, subject, repo_path, data_type):
             p_str = p.split(',')[0].lower() + '-' + p.split(',')[1]+ '-' + p.split(',')[2]+ '-' + p.split(',')[3]
             mean_img = nib.load(f'{repo_path}/figures/mean_img_{data_type}_pipeline_{p_str}_con_{contrast}.nii')
             ax = fig.add_subplot(gs[com, int(i)])
+            
+            if i == 0:
+                ax.set_title(f'Community {com+1}', size=28, fontweight='bold', backgroundcolor= 'black', color='white', 
+                            y=1.1, pad=1)
 
             disp = plotting.plot_glass_brain(mean_img, display_mode = 'z', colorbar = True, annotate=False, 
                                                      cmap=nilearn_cmaps['cold_hot'], plot_abs=False, figure=fig, axes=ax)
@@ -192,6 +196,11 @@ def plot_pipeline_maps(contrast, partition, subject, repo_path, data_type):
                                                              two_sided=False)
 
             ax2 = fig2.add_subplot(gs2[com, int(i)])
+            
+            if i == 0:
+                ax2.set_title(f'Community {com+1}', size=28, fontweight='bold', backgroundcolor= 'black', color='white',
+                             y=1.1, pad=1)
+                
             disp2 = plotting.plot_glass_brain(thresh_mean_img, display_mode = 'z', colorbar = True, annotate=False, 
                                                      cmap=nilearn_cmaps['cold_hot'], plot_abs=False, figure=fig2, axes=ax2)
             disp2.title(f'Pipeline {p_str}', size=24, fontweight='bold')

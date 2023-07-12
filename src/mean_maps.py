@@ -12,12 +12,12 @@ import networkx as nx
 
 def main():
     # Parameters 
-    #data_path = '/nfs/nas-empenn/data/share/users/egermani/hcp_many_pipelines'
-    #repo_path = '/srv/tempdd/egermani/pipeline_distance'
-    data_path = '/Volumes/empenn/egermani/hcp_many_pipelines' # Path to data
-    repo_path = '/Users/egermani/Documents/pipeline_distance' # Path to repository (to avoid relative paths)
+    data_path = '/nfs/nas-empenn/data/share/users/egermani/hcp_many_pipelines'
+    repo_path = '/srv/tempdd/egermani/pipeline_distance'
+    #data_path = '/Volumes/empenn/egermani/hcp_many_pipelines' # Path to data
+    #repo_path = '/Users/egermani/Documents/pipeline_distance' # Path to repository (to avoid relative paths)
 
-    contrast = 'right-hand'
+    contrast = 'right-foot'
     data_type='group'
 
     Qs = louvain_utils.compute_correlation_matrix(data_path, repo_path, contrast, data_type)

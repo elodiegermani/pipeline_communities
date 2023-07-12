@@ -246,6 +246,11 @@ def build_both_graph_heatmap(matrix, G, partition, subjects, saving_names, contr
                 if labels[j] == labels[i].split(',')[0]+',8,'+labels[i].split(',')[2]+','+labels[i].split(',')[3]:
                     mask_C[i][j] = 0
                     ind_mask_C.append((i,j))
+        if labels[i].split(',')[1]=='8':
+            for j in range(len(labels)):
+                if labels[j] == labels[i].split(',')[0]+',5,'+labels[i].split(',')[2]+','+labels[i].split(',')[3]:
+                    mask_C[i][j] = 0
+                    ind_mask_C.append((i,j))
                     
     
     cm = seaborn.heatmap(matrix_organized_louvain, mask = mask_A, center=0, cmap='coolwarm', robust=True, square=True, ax=axs, cbar_kws={'shrink': 0.6}, xticklabels=False, annot=labs, fmt='', cbar=False, vmin=0, vmax=vmax)
@@ -254,8 +259,7 @@ def build_both_graph_heatmap(matrix, G, partition, subjects, saving_names, contr
     
     for ind in ind_mask_C:
         cm.add_patch(Rectangle(ind, 1, 1, fill=False, edgecolor='green', lw=3))
-
-    
+        
     N_team = matrix_organized_louvain.columns.__len__()
     axs.set_xticks(range(N_team), labels=labels, rotation=90, fontsize=22)
     axs.set_yticks(range(N_team), labels=labels, rotation=360, fontsize=22)
