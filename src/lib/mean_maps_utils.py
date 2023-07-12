@@ -11,7 +11,7 @@ from nibabel.processing import resample_from_to
 
 
 def compute_mean_maps(data_path, repo_path, contrast, partition, data_type):
-    if not os.path.exists(f'{repo_path}/figures/mean_img_{data_type}_community_0_con_{contrast}.nii'):
+    if not os.path.exists(f'{repo_path}/figures/mean_img_{data_type}_community_0_con_{contrast}.nii') or not os.path.exists(f'{repo_path}/figures/mean_img_{data_type}_pipeline_fsl-5-0-0_con_{contrast}.nii'):
         if data_type == 'group':
             data_fpath = f'{data_path}/group-1_{contrast}_*_tstat.nii*'
 
