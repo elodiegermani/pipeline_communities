@@ -173,10 +173,10 @@ def plot_pipeline_maps(contrast, partition, subject, repo_path, data_type):
 
     n_communities=len(community)
     fig = plt.figure(figsize = (7 * 8, 7 * n_communities))
-    gs = fig.add_gridspec(n_communities, 8)
+    gs = fig.add_gridspec(n_communities, 10)
 
     fig2 = plt.figure(figsize = (7 * 8, 7 * n_communities))
-    gs2 = fig.add_gridspec(n_communities, 8)
+    gs2 = fig.add_gridspec(n_communities, 10)
 
     for com in range(n_communities):
         for i, p in enumerate(community[com]):
