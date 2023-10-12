@@ -1,3 +1,5 @@
+# python3
+## This script can be launched in command line to compute correlation matrices, louvain algorithm and graphs and heatmaps
 # import warnings filter
 from warnings import simplefilter
 # ignore all future warnings
@@ -20,15 +22,13 @@ import itertools
 
 def main():
 	# Parameters 
-	#data_path = '/nfs/nas-empenn/data/share/users/egermani/hcp_many_pipelines'
-	#repo_path = '/srv/tempdd/egermani/pipeline_distance'
 	data_path = '/Volumes/empenn/egermani/hcp_many_pipelines' # Path to data
 	repo_path = '/Users/egermani/Documents/pipeline_distance' # Path to repository (to avoid relative paths)
 
 	contrast = 'right-hand'
 	data_type='group'
 
-
+	# Compute correlation matrices 
 	if contrast != 'all':
 		Qs = louvain_utils.compute_correlation_matrix(data_path, repo_path, contrast, data_type)
 
@@ -41,7 +41,7 @@ def main():
 
 		Qs = list(itertools.chain(*Qs_unchain))
 
-	# Partition each group/subject level correlation matrix
+	# Partition each group/subject level correlation matrix 
 	partitioning = louvain_utils.per_group_partitioning(Qs)
 
 	# Compute matrix of belonging to the same community across groups/subject for each pair of pipeline

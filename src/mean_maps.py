@@ -1,3 +1,5 @@
+# python3
+## This script can be launched in command line to compute the mean maps per community and pipeline. 
 # import warnings filter
 from warnings import simplefilter
 # ignore all future warnings
@@ -12,10 +14,8 @@ import networkx as nx
 
 def main():
     # Parameters 
-    data_path = '/nfs/nas-empenn/data/share/users/egermani/hcp_many_pipelines'
-    repo_path = '/srv/tempdd/egermani/pipeline_distance'
-    #data_path = '/Volumes/empenn/egermani/hcp_many_pipelines' # Path to data
-    #repo_path = '/Users/egermani/Documents/pipeline_distance' # Path to repository (to avoid relative paths)
+    data_path = '/Volumes/empenn/egermani/hcp_many_pipelines' # Path to data
+    repo_path = '/Users/egermani/Documents/pipeline_distance' # Path to repository (to avoid relative paths)
 
     contrast = 'right-foot'
     data_type='group'
